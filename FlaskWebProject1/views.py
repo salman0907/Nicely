@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template
 from FlaskWebProject1 import app
 from watson_developer_cloud import AlchemyLanguageV1
 from requests_oauthlib import OAuth1
@@ -9,9 +9,13 @@ import pandas as pd
 from multiprocessing import Pool
 
 
-@app.route('/')
+@app.route('/', methods=['GET', "POST"])
 def home():
     return render_template("index.html")
+
+@app.route('/g1', methods=['GET', "POST"])
+def g1():
+    return render_template("dough.html")
 
 
 def analyze_str(textString):
@@ -145,7 +149,6 @@ def twitter_bt(username):
     return json.dumps({"avg": data, "points": {'hour': df['hour'].tolist(), 'st': df['st'].tolist(), 'fc': df['fc'].tolist(), 'rf': df['rc'].tolist()}}), 200
 
 
-@app.route('/sentence', methods=["POST"])
-def sentence():
-    data = request.get_json()
-    return data['sentence'], 200
+@app.route('/testme', methods=["GET", "POST"])
+def testme():
+    return "hey", 200

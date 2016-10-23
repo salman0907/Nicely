@@ -1,9 +1,11 @@
 var handle;
 $("#fbauth").click(function(){
 	handle = $("#tw_handle").val();
-	alert(handle);	
-		//alert("The paragraph was clicked.");
+  $.get("http://5d3b98ac.ngrok.io/testme", function(data) {
+    console.log(data);
+  });
 });
+
 
 $('.form').find('input, textarea').on('keyup blur focus', function (e) {
   
