@@ -19,4 +19,4 @@ fear = info['docEmotions']['fear']					#fear score
 sadness = info['docEmotions']['sadness']			#sadness score
 disgust = info['docEmotions']['disgust']			#disgust score
 overallSentiment = info['docSentiment']['type']		#will be a string, either "positive" or "negative"
-overallScore = into['docSentiment']['score']		#will be a positive or negative number. The more negative value, the more negative sentiment
+overallScore = info['docSentiment']['score']		#will be a positive or negative number. The more negative value, the more negative sentiment
