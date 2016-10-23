@@ -31,7 +31,7 @@ def g3():
 
 @app.route('/buttons', methods=['GET', "POST"])
 def buttons():
-    return render_template("buttons.html")
+    return render_template("button_rev.html")
 
 
 def analyze_str(textString):
