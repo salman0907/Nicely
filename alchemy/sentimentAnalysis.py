@@ -2,17 +2,14 @@ import json
 from os.path import join, dirname
 from watson_developer_cloud import AlchemyLanguageV1
 
-alchemy_language = AlchemyLanguageV1(api_key='df8f270a6f64bc6cab503b9018b9f4940d12eb76')
 
 myString = 'I hate you, go die'
 
 def analyzeString(textString):
-	combined_operations = ['doc-emotion', 'doc-sentiment']
-	#print(json.dumps(alchemy_language.combined(text=textString, extract=combined_operations), indent=2))
-	data = alchemy_language.combined(text=textString, extract=combined_operations)
-	#return data["docEmotions"]
-	#return {data["docSentiment"], data["docEmotions"]}
-	return data
+    alchemy_language = AlchemyLanguageV1(api_key='df8f270a6f64bc6cab503b9018b9f4940d12eb76')
+    combined_operations = ['doc-emotion', 'doc-sentiment']
+    data = alchemy_language.combined(text=textString, extract=combined_operations)
+    return data
 
 info = analyzeString(myString);
 #print info['docSentiment']
