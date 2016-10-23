@@ -24,6 +24,11 @@ def g2():
     return render_template("g2.html")
 
 
+@app.route('/g3', methods=['GET', "POST"])
+def g3():
+    return render_template("g3.html")
+
+
 @app.route('/buttons', methods=['GET', "POST"])
 def buttons():
     return render_template("buttons.html")
@@ -88,6 +93,20 @@ def sentiment_tweets(tweets):
     # st_tweets = []
     p = Pool(5)
     st_tweets = p.map(mp_func, tweets)
+    ms = -1
+    im = 0
+    mi = 0
+    mv = 1
+    empty = {}
+    for i, v in enumerate(st_tweets):
+        if empty != v:
+            if v['st'] > ms:
+                im = i
+                ms = v['st']
+            if v['st'] < mv:
+                mv = v['st']
+                mi = i
+    
     # for i in tweets:
         # try:
             # st = analyze_str(i['text'])
@@ -110,7 +129,18 @@ def sentiment_tweets(tweets):
         # except:
             # pass
 
-    return st_tweets
+    return st_tweets, {
+        "max": 
+            {
+                "v": ms,
+                "text": tweets[im]['text']
+            },
+        "min":
+            {
+                "v": mv,
+                "text": tweets[mi]['text']
+            }
+        }
 
 def fast(tweets):
     texts = []
@@ -157,7 +187,8 @@ def twitter_emo(username):
 @app.route("/twitter/bt/<username>", methods=["GET"])
 def twitter_bt(username):
     tweets = get_twitter_data(username)
-    df = pd.DataFrame(sentiment_tweets(tweets))
+    td, mm = sentiment_tweets(tweets)
+    df = pd.DataFrame(td)
     df.dropna(inplace=True)
     data = best_time_to_tweet(df)
     return json.dumps(
@@ -168,7 +199,8 @@ def twitter_bt(username):
                     'st': df['st'].tolist(), 'fc': df['fc'].tolist(),
                     'rf': df['rc'].tolist()
                 },
-                "emo": emotion_breakout(df)
+                "emo": emotion_breakout(df),
+                "mm": mm
             }), 200
 
 

@@ -15,19 +15,18 @@ Edit on
 }</style>
   
   <div id="myDiv" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
-  <h1 id="analysis"></h1>
   <script>
-    var data = sessionStorage.bt;
+  var data = sessionStorage.bt;
+
     data = JSON.parse(data);
-    console.log(data);
 
     var points = data['points'];
 
     var trace1 = {
-      x: points['hour'], 
-      y: points['st'], 
+      x: points['st'], 
+      y: points['fc'], 
       mode: 'markers', 
-     // name: 'North America', 
+      name: 'Favorite', 
       marker: {
         //color: 'rgb(164, 194, 244)', 
         size: 12
@@ -35,36 +34,33 @@ Edit on
       type: 'scatter'
     };
 
-    var dat = [trace1];
+    var trace2 = {
+      x: points['st'], 
+      y: points['rc'], 
+      mode: 'markers', 
+      name: 'Retweets', 
+      marker: {
+        //color: 'rgb(164, 194, 244)', 
+        size: 12
+      }, 
+      type: 'scatter'
+    };
+
+    var data = [trace1];
 
     var layout = {
-      title: 'Hour vs. Sentiment', 
+      title: 'Popularity vs. Sentiment', 
       xaxis: {
-        title: 'Hour of the day', 
+        title: 'Positivity', 
         showgrid: false, 
         zeroline: false
       }, 
       yaxis: {
-        title: 'Positivity (max 1.0)', 
+        title: 'Count', 
         showline: false
       }
     };
 
-    Plotly.newPlot('myDiv', dat, layout); 
-
-    var avg = data['avg'];
-    var hour = avg['hour'];
-    var st = avg['st'];
-    var max = -1;
-    var mh = 0;
-    for (var i = 0; i < st.length; i++) {
-        if (st[i] > max) {
-            max = st[i];
-            mh = hour[i];
-        }      
-    }
-
-    $("#analysis").html("Your most positive tweets happen at " + mh + " with an average positivety of " + max + ". You should tweet more then.");
-
+    Plotly.newPlot('myDiv', data, layout); 
   </script>
 </body>
