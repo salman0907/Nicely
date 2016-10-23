@@ -21,7 +21,7 @@
             sessionStorage.setItem('bt', data);
             var j = JSON.parse(data);
             var sc =  Math.round(100*j['os'])
-            $("#score").html("Nicely Score: " + score)
+            $("#score").html("Nicely Score: " + sc)
             $("#tlink").attr("href", "https://twitter.com/intent/tweet?text=%23hackharassment%20I%20scored%20"+score+"%20on%20Nicely")
             console.log("done1");
         });

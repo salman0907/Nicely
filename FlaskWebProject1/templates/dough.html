@@ -5,7 +5,7 @@
     <title>Jay</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/static/dough.css">
+	<!--<link rel="stylesheet" type="text/css" href="/static/dough.css">-->
     <!--<style>-->
     <!--canvas {-->
         <!---moz-user-select: none;-->
@@ -17,21 +17,33 @@
         #analysis {
             color: white;
         }
+        body {
+            background-color: #3D72CE;
+        }
     </style>
 </head>
 
 <body>
     <script src="/static/dough.js"></script>
+    <h1 style='text-align: center;
+color: white;
+font-size: 50px; font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 100; text-align: center; color: white;'>Tweet Emotions</h1>
     <div id="canvas-holder" style="width:100%">
         <canvas id="chart-area" />
     </div>
+
+        
     <!--<button id="randomizeData">Randomize Data</button>-->
     <!--<button id="addDataset">Add Dataset</button>-->
     <!--<button id="removeDataset">Remove Dataset</button>-->
     <!--<button id="addData">Add Data</button>-->
     <!--<button id="removeData">Remove Data</button>-->
+    <h1 style='font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 100; text-align: center' id="analysis"></h1>
 
-    <h1 id="analysis"></h1>
+    <div class="tab-content">
+        <a id="turl" style="position: absolute; left: 33%;" id="tlink" href="https://twitter.com/intent/tweet?text=%23hackharassment%20I%20scored%2088%20on%20Nicely"><img src="/static/Twitter_Logo_Blue.png"></a>
+    </div>
+
         
 </body>
 

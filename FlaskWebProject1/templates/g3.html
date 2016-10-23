@@ -1,5 +1,3 @@
-HTML   JS  Result
-Edit on 
 <head>
   <!-- Plotly.js -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -12,10 +10,15 @@ Edit on
     <style>
 .modebar.modebar--hover {
     display: none;
-}</style>
+}
+        body {
+        background-color: #3D72CE;
+    }
+</style>
   
-  <div id="myDiv" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
-  <h1 id="analysis"></h1>
+  <div id="myDiv" </div>
+    <h1 style='font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 100; text-align: center; color: white;' id="analysis"></h1>
+
   <script>
   var data = sessionStorage.bt;
 
@@ -31,7 +34,7 @@ Edit on
       mode: 'markers', 
       name: 'Favorite', 
       marker: {
-        //color: 'rgb(164, 194, 244)', 
+        color: '#FFA500', 
         size: 12
       }, 
       type: 'scatter'
@@ -53,15 +56,36 @@ Edit on
 
     var layout = {
       title: 'Popularity vs. Sentiment', 
+              titlefont: {
+            //family='Courier New, monospace',
+            //size=18,
+            color: '#FFF'
+        },
+
       xaxis: {
         title: 'Positivity', 
         showgrid: false, 
-        zeroline: false
+        zeroline: false,
+                    titlefont: {
+            //family='Courier New, monospace',
+            //size=18,
+            color: '#FFF'
+        }
+
       }, 
       yaxis: {
         title: 'Favorites', 
-        showline: false
-      }
+        showline: false,
+                    titlefont: {
+            //family='Courier New, monospace',
+            //size=18,
+            color: '#FFF'
+        }
+
+      },
+            paper_bgcolor:'rgba(0,0,0,0)',
+        plot_bgcolor:'rgba(0,0,0,0)'
+
     };
 
     Plotly.newPlot('myDiv', data, layout); 
@@ -85,9 +109,9 @@ Edit on
 
     text = "";
     if (pa > na) {
-        text = "Your posts are more popular when you're positive. Your positive tweets average " + pa + " favorites while your negative tweets average " + na + " favorites.";
+        text = "Your tweets are more popular when you're positive. They average " + pa + " favorites while your negative tweets average " + na + " favorites.";
     } else {
-        text = "Your posts are more popular when you're negative. Your negative tweets average " + na + " favorites while your positive tweets average " + pa + " favorites. Your Twitter followers are very toxic.";
+        text = "Your tweets are more popular when you're negative. They average " + na + " favorites while your positive tweets average " + pa + " favorites. Your Twitter followers are very toxic.";
     }
 
     $("#analysis").html(text);

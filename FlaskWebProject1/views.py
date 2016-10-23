@@ -35,7 +35,7 @@ def buttons():
 
 
 def analyze_str(textString):
-    alchemy_language = AlchemyLanguageV1(api_key='39ee6f3202c6eecc699264a233b3192c872873e2')
+    alchemy_language = AlchemyLanguageV1(api_key='2b1daec372bb522a3606a60362241a1d37c146bb')
     combined_operations = ['doc-emotion', 'doc-sentiment']
     data = alchemy_language.combined(text=textString, extract=combined_operations, language="english")
     return data
@@ -133,7 +133,8 @@ def sentiment_tweets(tweets):
         "max": 
             {
                 "v": ms,
-                "text": tweets[im]['text']
+                "text": tweets[im]['text'],
+                "url": "https://twitter.com/%s/status/%s" % (tweets[im]['user']['screen_name'], tweets[im]['id'])
             },
         "min":
             {

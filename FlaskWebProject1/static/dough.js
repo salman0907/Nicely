@@ -1,3 +1,4 @@
+Chart.defaults.global.legend.display = false;
 var all = JSON.parse(sessionStorage.bt);
 console.log(all);
 var da = all['emo'];
@@ -7,11 +8,11 @@ var config = {
     datasets: [{
       data: da,
       backgroundColor: [
-        "#EEEEEE",
-        "#000E77",
-        "#773344",
-        "#E3B5A4",
-        "#0B0014",
+        "#FFB2CF",
+        "#FFC7B2",
+        "#C7B2FF",
+        "#FFEEB2",
+        "#B2EAFF",
       ],
       label: 'Dataset 1'
     }],
@@ -25,12 +26,12 @@ var config = {
 },
 options: {
       responsive: true,
-      legend: {
-                position: 'top',
-              },
+      //legend: {
+                //position: 'top',
+              //},
       title: {
-                display: true,
-                text: 'Chart.js Doughnut Chart'
+                display: false,
+                text: 'Tweet Emotions'
               },
       animation: {
                 animateScale: true,
@@ -46,12 +47,13 @@ window.onload = function() {
   var text = "";
 
   if (da[3] > .5) {
-    text = "Your doing a great job being positive! Your best tweet was: \"" + all['mm']['max']['text'] + "\" with a positivity score of " + all['mm']['max']['v'];
+    text = "Your doing a great job being positive! <br>Continue to tweet like this: " 
   } else {
-    text = "Try to be more considerate of other in your tweets, try to do more like this one: \"" + all['mm']['max']['text'] + "\" it has a positivity score of " + all['mm']['max']['v'];
+    text = "Try to be more considerate of others in your tweets, <br>try to tweet like this: ";
   }
 
   console.log(text);
     
   $("#analysis").html(text);
+  $("#turl").attr("href", all['mm']['max']['url'])
 };
