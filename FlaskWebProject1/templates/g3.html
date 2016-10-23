@@ -15,10 +15,13 @@ Edit on
 }</style>
   
   <div id="myDiv" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
+  <h1 id="analysis"></h1>
   <script>
   var data = sessionStorage.bt;
 
     data = JSON.parse(data);
+
+    console.log(data);
 
     var points = data['points'];
 
@@ -62,5 +65,32 @@ Edit on
     };
 
     Plotly.newPlot('myDiv', data, layout); 
+    var st = points['st'];
+    var fc = points['fc'];
+    var pa = 0;
+    var na = 0;
+    for (var i = 0; i < st.length; i++) {
+        if (st[i] > 0) {
+            pa += fc[i];
+        } else {
+            na += fc[i];
+        }
+    }
+ 
+    pa /= st.length;
+    na /= st.length;
+
+    pa = Math.round(pa);
+    na = Math.round(na);
+
+    text = "";
+    if (pa > na) {
+        text = "Your posts are more popular when you're positive. Your positive tweets average " + pa + " favorites while your negative tweets average " + na + " favorites.";
+    } else {
+        text = "Your posts are more popular when you're negative. Your negative tweets average " + na + " favorites while your positive tweets average " + pa + " favorites. Your Twitter followers are very toxic.";
+    }
+
+    $("#analysis").html(text);
+
   </script>
 </body>
