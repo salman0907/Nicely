@@ -5,12 +5,15 @@
 
 <body>
     buttons
+    <h1 id="score"></h1>
     <a href="https://twitter.com/intent/tweet?text=%23hackharassment%20I%20scored%2088%20on%20Nicely">tweet</a>
     <a href="http://www.hackharassment.com/pledge/">take the pledge</a>
     <script>
         var handle = sessionStorage.handle;
         $.get("http://5d3b98ac.ngrok.io/twitter/bt/" + handle, function(data) {
             sessionStorage.setItem('bt', data);
+            var j = JSON.parse(data);
+            $("#score").html("Your overall score is " + j['os'])
             console.log("done1");
         });
         /*$.get("http://5d3b98ac.ngrok.io/twitter/emo/" + handle, function(data) {

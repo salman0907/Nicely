@@ -200,7 +200,8 @@ def twitter_bt(username):
                     'rf': df['rc'].tolist()
                 },
                 "emo": emotion_breakout(df),
-                "mm": mm
+                "mm": mm,
+                "os": df['st'].mean()
             }), 200
 
 
