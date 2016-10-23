@@ -16,9 +16,7 @@ Edit on
   
   <div id="myDiv" style="width: 480px; height: 400px;"><!-- Plotly chart will be drawn inside this DIV --></div>
   <script>
-    var href = window.location.href
-    var last_part = href.substr(href.lastIndexOf('/') + 1);
-      $.get("http://5d3b98ac.ngrok.io/twitter/bt/" + last_part, function(data) {
+  var data = sessionStorage.bt;
 
     data = JSON.parse(data);
 
@@ -52,6 +50,5 @@ Edit on
     };
 
     Plotly.newPlot('myDiv', data, layout); 
-  });
   </script>
 </body>

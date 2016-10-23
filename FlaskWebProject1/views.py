@@ -13,13 +13,20 @@ from multiprocessing import Pool
 def home():
     return render_template("index.html")
 
-@app.route('/g1/<username>', methods=['GET', "POST"])
-def g1(username):
+
+@app.route('/g1', methods=['GET', "POST"])
+def g1():
     return render_template("dough.html")
 
-@app.route('/g2/<username>', methods=['GET', "POST"])
-def g2(username):
+
+@app.route('/g2', methods=['GET', "POST"])
+def g2():
     return render_template("g2.html")
+
+
+@app.route('/buttons', methods=['GET', "POST"])
+def buttons():
+    return render_template("buttons.html")
 
 
 def analyze_str(textString):
@@ -153,7 +160,16 @@ def twitter_bt(username):
     df = pd.DataFrame(sentiment_tweets(tweets))
     df.dropna(inplace=True)
     data = best_time_to_tweet(df)
-    return json.dumps({"avg": data, "points": {'hour': (df['hour']+(df['minute']/60)).tolist(), 'st': df['st'].tolist(), 'fc': df['fc'].tolist(), 'rf': df['rc'].tolist()}}), 200
+    return json.dumps(
+            {
+                "avg": data,
+                "points": {
+                    'hour': (df['hour']+(df['minute']/60)).tolist(),
+                    'st': df['st'].tolist(), 'fc': df['fc'].tolist(),
+                    'rf': df['rc'].tolist()
+                },
+                "emo": emotion_breakout(df)
+            }), 200
 
 
 @app.route('/testme', methods=["GET", "POST"])

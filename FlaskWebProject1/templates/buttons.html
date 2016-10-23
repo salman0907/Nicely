@@ -1,0 +1,19 @@
+<head>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+</head>
+
+<body>
+    buttons
+    <script>
+        var handle = sessionStorage.handle;
+        $.get("http://5d3b98ac.ngrok.io/twitter/bt/" + handle, function(data) {
+            sessionStorage.setItem('bt', data);
+            console.log("done1");
+        });
+        /*$.get("http://5d3b98ac.ngrok.io/twitter/emo/" + handle, function(data) {
+            sessionStorage.setItem('emo', data);
+            console.log("done2");
+        });*/
+    </script>
+</body>

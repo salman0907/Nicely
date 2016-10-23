@@ -1,9 +1,9 @@
 var handle;
 $("#fbauth").click(function(){
 	handle = $("#tw_handle").val();
-  $.get("http://5d3b98ac.ngrok.io/testme", function(data) {
-    console.log(data);
-  });
+  console.log(handle);
+  sessionStorage.setItem('handle', handle);
+  document.location.href = "http://5d3b98ac.ngrok.io/buttons"
 });
 
 
