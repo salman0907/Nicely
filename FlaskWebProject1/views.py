@@ -13,15 +13,19 @@ from multiprocessing import Pool
 def home():
     return render_template("index.html")
 
-@app.route('/g1', methods=['GET', "POST"])
-def g1():
+@app.route('/g1/<username>', methods=['GET', "POST"])
+def g1(username):
     return render_template("dough.html")
+
+@app.route('/g2/<username>', methods=['GET', "POST"])
+def g2(username):
+    return render_template("g2.html")
 
 
 def analyze_str(textString):
-    alchemy_language = AlchemyLanguageV1(api_key='df8f270a6f64bc6cab503b9018b9f4940d12eb76')
+    alchemy_language = AlchemyLanguageV1(api_key='39ee6f3202c6eecc699264a233b3192c872873e2')
     combined_operations = ['doc-emotion', 'doc-sentiment']
-    data = alchemy_language.combined(text=textString, extract=combined_operations)
+    data = alchemy_language.combined(text=textString, extract=combined_operations, language="english")
     return data
 
 
@@ -53,8 +57,10 @@ def mp_func(i):
         fcs = 'favorite_count'
         rcs = 'retweet_count'
         de = st['docEmotions']
+        dt = datetime.strptime(i['created_at'], '%a %b %d %H:%M:%S +%f %Y')
         tw = {
-                "hour": datetime.strptime(i['created_at'], '%a %b %d %H:%M:%S +%f %Y').hour,
+                "hour": int(dt.hour),
+                "minute": float(dt.minute),
                 "st": float(st['docSentiment']['score']),
                 "anger": float(de['anger']),
                 "disgust": float(de['disgust']),
@@ -124,13 +130,14 @@ def best_time_to_tweet(df):
 
 def emotion_breakout(df):
     mn = df.mean()
-    return {
-            "anger": mn['anger'],
-            "disgust": mn['disgust'],
-            "fear": mn['fear'],
-            "joy": mn['joy'],
-            "sadness": mn['sadness']
-    }
+    # return {
+            # "anger": mn['anger'],
+            # "disgust": mn['disgust'],
+            # "fear": mn['fear'],
+            # "joy": mn['joy'],
+            # "sadness": mn['sadness']
+    # }
+    return [mn['anger'], mn['disgust'], mn['fear'], mn['joy'], mn['sadness']]
 
 
 @app.route("/twitter/emo/<username>", methods=["GET"])
@@ -146,7 +153,7 @@ def twitter_bt(username):
     df = pd.DataFrame(sentiment_tweets(tweets))
     df.dropna(inplace=True)
     data = best_time_to_tweet(df)
-    return json.dumps({"avg": data, "points": {'hour': df['hour'].tolist(), 'st': df['st'].tolist(), 'fc': df['fc'].tolist(), 'rf': df['rc'].tolist()}}), 200
+    return json.dumps({"avg": data, "points": {'hour': (df['hour']+(df['minute']/60)).tolist(), 'st': df['st'].tolist(), 'fc': df['fc'].tolist(), 'rf': df['rc'].tolist()}}), 200
 
 
 @app.route('/testme', methods=["GET", "POST"])
