@@ -1,7 +1,12 @@
 from flask import render_template, request
 from FlaskWebProject1 import app
 from watson_developer_cloud import AlchemyLanguageV1
-from twython import Twython # pip install twython
+from requests_oauthlib import OAuth1
+import requests
+import json
+from datetime import datetime
+import pandas as pd
+from multiprocessing import Pool
 
 
 @app.route('/')
@@ -16,26 +21,128 @@ def analyze_str(textString):
     return data
 
 
-def get_twitter_data(username):
-    CONSUMER_KEY = 'xlgtpTpPv6oZ13R6iHJ8J8QuR'
-    CONSUMER_SECRET = 'hNCZ5m609j6zPr4z0JnEdXf3pyadubny45QYudZWFGtWt6jqiM'
-    ACCESS_KEY = '782417738895495168-XJ4U0VAWg63EVRwKubK7oZMJDFhsqoC'
-    ACCESS_SECRET = 'MsuODbwT1z8Yrtvupst9KnEwL7djYbIbApD0tibJYNbq4'
+def get_twitter_data(user):
+    consumer_key = 'xlgtpTpPv6oZ13R6iHJ8J8QuR'
+    consumer_secret = 'hNCZ5m609j6zPr4z0JnEdXf3pyadubny45QYudZWFGtWt6jqiM'
+    access_token_key = '782417738895495168-XJ4U0VAWg63EVRwKubK7oZMJDFhsqoC'
+    access_token_secret = 'MsuODbwT1z8Yrtvupst9KnEwL7djYbIbApD0tibJYNbq4'
 
-    twitter = Twython(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET)
-    lis = []
-    tweets = []
-    for i in range(0, 16):
-        if len(lis):
-            user_timeline = twitter.get_user_timeline(screen_name=username, count=200, include_retweets=False, max_id=lis[-1])
-        else:
-            user_timeline = twitter.get_user_timeline(screen_name=username, count=200, include_retweets=False)
+    auth = OAuth1(consumer_key, consumer_secret,
+                  access_token_key, access_token_secret)
 
-        for tweet in user_timeline:
-            tweets.append(tweet['text'])
-            lis.append(tweet['id'])
+    get_url = lambda user, max_id: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=50&include_rts=false&exclude_replies=false&screen_name=%s%s' % (user, ('&max_id=%s' % max_id) if max_id else '')
 
-    return tweets
+    mx_id = 0
+    # tweets = []
+    # for i in range(16):
+    j = json.loads(requests.get(get_url(user, mx_id), auth=auth).text)
+        # tweets.extend(j)
+        # mx_id = tweets[-1]['id']
+
+    # return tweets
+    return j
+
+
+def mp_func(i):
+    try:
+        st = analyze_str(i['text'])
+        fcs = 'favorite_count'
+        rcs = 'retweet_count'
+        de = st['docEmotions']
+        tw = {
+                "hour": datetime.strptime(i['created_at'], '%a %b %d %H:%M:%S +%f %Y').hour,
+                "st": float(st['docSentiment']['score']),
+                "anger": float(de['anger']),
+                "disgust": float(de['disgust']),
+                "fear": float(de['fear']),
+                "joy": float(de['joy']),
+                "sadness": float(de['sadness']),
+                "alch": st,
+                "fc": 0 if fcs not in i else i[fcs],
+                "rc": 0 if rcs not in i else i[rcs]
+        }
+    except:
+        tw = {}
+
+    return tw
+
+
+def sentiment_tweets(tweets):
+    # st_tweets = []
+    p = Pool(5)
+    st_tweets = p.map(mp_func, tweets)
+    # for i in tweets:
+        # try:
+            # st = analyze_str(i['text'])
+            # fcs = 'favorite_count'
+            # rcs = 'retweet_count'
+            # de = st['docEmotions']
+            # tw = {
+                    # "hour": datetime.strptime(i['created_at'], '%a %b %d %H:%M:%S +%f %Y').hour,
+                    # "st": float(st['docSentiment']['score']),
+                    # "anger": float(de['anger']),
+                    # "disgust": float(de['disgust']),
+                    # "fear": float(de['fear']),
+                    # "joy": float(de['joy']),
+                    # "sadness": float(de['sadness']),
+                    # "alch": st,
+                    # "fc": 0 if fcs not in st else st[fcs],
+                    # "rc": 0 if rcs not in st else st[rcs]
+            # }
+            # st_tweets.append(tw)
+        # except:
+            # pass
+
+    return st_tweets
+
+def fast(tweets):
+    texts = []
+    for i in tweets:
+        texts.append(i['text'])
+    
+    st = analyze_str(texts)
+    de = st['docEmotions']
+    tw = {
+            "anger": float(de['anger']),
+            "disgust": float(de['disgust']),
+            "fear": float(de['fear']),
+            "joy": float(de['joy']),
+            "sadness": float(de['sadness']),
+    }
+
+    return [tw]
+
+
+def best_time_to_tweet(df):
+    st = df.groupby('hour').mean()['st']
+    return {"hour": list(st.index), "st": st.tolist()}
+
+
+def emotion_breakout(df):
+    mn = df.mean()
+    return {
+            "anger": mn['anger'],
+            "disgust": mn['disgust'],
+            "fear": mn['fear'],
+            "joy": mn['joy'],
+            "sadness": mn['sadness']
+    }
+
+
+@app.route("/twitter/emo/<username>", methods=["GET"])
+def twitter_emo(username):
+    tweets = get_twitter_data(username)
+    data = emotion_breakout(pd.DataFrame(fast(tweets)))
+    return json.dumps(data), 200
+
+
+@app.route("/twitter/bt/<username>", methods=["GET"])
+def twitter_bt(username):
+    tweets = get_twitter_data(username)
+    df = pd.DataFrame(sentiment_tweets(tweets))
+    df.dropna(inplace=True)
+    data = best_time_to_tweet(df)
+    return json.dumps({"avg": data, "points": {'hour': df['hour'].tolist(), 'st': df['st'].tolist(), 'fc': df['fc'].tolist(), 'rf': df['rc'].tolist()}}), 200
 
 
 @app.route('/sentence', methods=["POST"])
