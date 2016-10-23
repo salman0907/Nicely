@@ -1,13 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<body>
-		<button id="login" type="button" class="btn btn-default">Login</button>
-		<script src="/static/scripts/main.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	</body>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+    <!--<head>-->
+        <!--<meta charset="utf-8">-->
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+    <!--<body>-->
+        <!--<button id="login" type="button" class="btn btn-default">Login</button>-->
+        <!--<script src="/static/scripts/main.js"></script>-->
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+        <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+    <!--</body>-->
+<!--</html>-->
+
+<html> 
+<head> 
+<title>Client Flow Example</title> 
+</head>
+<body> 
+<script> 
+function displayUser(user) { 
+var userName = document.getElementById('userName'); 
+var greetingText = document.createTextNode ('Greetings, ' + user.name + '.'); 
+userName.appendChild(greetingText); 
+} 
+var appID = "1129603600458990"; 
+if (window.location.hash.length == 0) { 
+var path = 'https://www.facebook.com/ dialog/oauth?'; 
+var queryParams = ['client_id=' + appID, 'redirect_uri=' + window.location, ' response_type=token']; 
+var query = queryParams.join('&'); 
+var url = path + query; 
+window.open(url); 
+} 
+else { 
+var accessToken = window.location.hash.substring(1); 
+var path = "https://graph.facebook.com/me?"; 
+var queryParams = [accessToken, 'callback= displayUser']; 
+var query = queryParams.join('&'); 
+var url = path + query; 
+// use jsonp to call the graph 
+var script = document.createElement('script'); 
+script.src = url; 
+document.body.appendChild(script); 
+} 
+</script> 
+<p id="userName"></p>
+</body> 
 </html>
+
