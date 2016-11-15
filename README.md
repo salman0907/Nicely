@@ -6,3 +6,9 @@ Nicely is a Web app that analyzes a user’s tweets and obtains sentiment data. 
 
 # Functionality and Usage
 The web application allows the user to enter a Twitter handle and instantly see feedback and analytics of the Tweets from that handle. These analytics include what percentage of their Tweets contain angry sentiment, or other negative sentiments. The web app also gives the user an example of a good tweet and analyzes timestamps to tell the user what times they are more or less likely to post negative tweets.
+
+# Screenshots
+<img src="Screenshots/Nicely1.png">
+<img src="Screenshots/Nicely2.png">
+<img src="Screenshots/Nicely3.png">
+<img src="Screenshots/Nicely4.png">
